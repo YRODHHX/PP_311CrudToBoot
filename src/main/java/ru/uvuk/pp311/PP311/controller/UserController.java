@@ -4,15 +4,13 @@ package ru.uvuk.pp311.PP311.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.uvuk.pp311.PP311.model.User;
 import ru.uvuk.pp311.PP311.service.UserService;
 
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 
@@ -20,38 +18,38 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/users")
+    @GetMapping
     public String printUsers (Model model) {
         model.addAttribute("users",userService.findAll());
         return "users";
     }
-    @GetMapping("/users/new")
+    @GetMapping("/new")
     public String showCreateUserForm(Model model) {
         model.addAttribute("user", new User());
         return "new-user";
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public String createUser(@ModelAttribute User user) {
         userService.add(user);
         return "redirect:/users";
     }
 
-    @GetMapping("/users/edit")
+    @GetMapping("/edit")
     public String showEditUserForm(@RequestParam("id") Long id, Model model) {
         User user = userService.findById(id);
         model.addAttribute("user", user);
         return "edit-user";
     }
 
-    @PostMapping("/users/edit")
+    @PostMapping("/edit")
     public String editUser(@RequestParam("id") Long id, @ModelAttribute User user) {
         user.setId(id);
         userService.update(user);
         return "redirect:/users";
     }
 
-    @PostMapping("/users/delete")
+    @PostMapping("/delete")
     public String deleteUser(@RequestParam("id") Long id) {
         userService.delete(id);
         return "redirect:/users";
